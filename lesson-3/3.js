@@ -15,13 +15,22 @@ function f(a, b, c) {
       console.log((a - b) / c);
       return (a - b) / c;
     } else {
-      throw new Error("all parameters type should be a Number");
+      try {
+        setTimeout(function(){
+          throw new Error("all parameters type should be a Number");
+        }, 0)
+       
+      } catch (err) {
+        console.log(err.message);
+        
+      }
+      console.log(2);
     }
   }
 }
 
 /* не удалять */
-f(9, 3, 2); // 3
+// f(9, 3, 2); // 3
 f("s", 9, 3); // Error: all parameters type should be a Number
 
 exports.f = f;
