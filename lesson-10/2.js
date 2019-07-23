@@ -19,16 +19,17 @@
 
 // Решение
 const isValidType = fn => {
-  if (fn && {}.toString.call(fn) !== "[object Function]") {
+  const func = fn && {}.toString.call(fn) === "[object Function]";
+
+  if (!func) {
     throw new Error(`${fn} is not a function`);
-  } else {
-    return;
   }
+  return func;
 };
 
 const calculate = (...functions) => {
   for (let i = 0; i < functions.length; i++) {
-    if (!isValidType(functions[i])) {
+    if (isValidType(functions[i])) {
       return functions[i + 2](functions[i + 1](functions[i]()));
     }
   }

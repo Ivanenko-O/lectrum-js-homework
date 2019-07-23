@@ -27,18 +27,35 @@
  */
 
 // Решение
+const isValidType = fn => {
+  const func = fn && {}.toString.call(fn) === "[object Function]";
+
+  if (!func) {
+    throw new Error(`${fn} is not a function`);
+  }
+  return func;
+};
+
+const compose = (...fns) => (...args) =>
+  fns.reduceRight((params, f) => {
+    if (isValidType(f)) {
+      return Array.isArray(params) ? f(...params) : f(params);
+    }
+  }, args);
+
 const result1 = compose(
-    prevResult => prevResult + 'o',
-    prevResult => prevResult + 'l',
-    prevResult => prevResult + 'l',
-    prevResult => prevResult + 'e',
-)('h');
+  prevResult => prevResult + "o",
+  prevResult => prevResult + "l",
+  prevResult => prevResult + "l",
+  prevResult => prevResult + "e"
+)("h");
+
 const result2 = compose(
-    prevResult => prevResult + 'o',
-    prevResult => prevResult + 'l',
-    prevResult => prevResult + 'l',
-    prevResult => prevResult + 'e',
-    () => 'h',
+  prevResult => prevResult + "o",
+  prevResult => prevResult + "l",
+  prevResult => prevResult + "l",
+  prevResult => prevResult + "e",
+  () => "h"
 )();
 
 console.log(result1); // 'hello'
