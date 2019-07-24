@@ -28,17 +28,43 @@ const isValidType = fn => {
   if (fn && {}.toString.call(fn) !== "[object Function]") {
     throw new Error(`${fn} is not a function`);
   } else {
-    return;
+    return true;
   }
 };
 
 const calculateAdvanced = (...functions) => {
-    
+  let report = {
+    value: 0,
+    errors: []
+  };
+
   for (let i = 0; i < functions.length; i++) {
     if (!isValidType(functions[i])) {
-      return functions[i + 2](functions[i + 1](functions[i]()));
+      return;
+    }
+
+    try {
+      if(functions[i]() === undefined) {
+        throw new Error(`Callback at index ${i} did not return any value`)
+      }
+
+      if (i === 0) {
+        report.value = functions[i]();
+      }
+
+      report.value = functions[i](report.value);      
+    } catch (e) {
+      let err = {
+        index: i,
+        name: e.name,
+        message: e.message
+      };
+
+      report.errors.push(err);
     }
   }
+
+  return report;
 };
 
 const result = calculateAdvanced(
