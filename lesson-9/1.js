@@ -15,32 +15,27 @@
  */
 
 // Решение
-function shallowClone(obj) {
-  return Object.create(
-    Object.getPrototypeOf(obj),
-    Object.getOwnPropertyDescriptors(obj)
-  );
-}
-
 function shallowMerge(obj1, obj2) {
-  // let k = shallowClone(obj1);
-  // console.log(Object.getOwnPropertyDescriptor((k, 'firstName').writable));
-  let result = {};
-  let result = { ...shallowClone(obj1), ...shallowClone(obj2)};
+  let newObj = {};
+  const descriptorsObj1 = Object.getOwnPropertyDescriptors(obj1);
+  const descriptorsObj2 = Object.getOwnPropertyDescriptors(obj2);
 
-  return result;
+  Object.defineProperties(newObj, descriptorsObj1);
+  Object.defineProperties(newObj, descriptorsObj2);
+
+  return newObj;
 }
 
-const user = { firstName: 'Marcus', lastName: 'Kronenberg' };
-const userData = { job: 'developer', country: 'Germany', lastName: 'Schmidt' };
+const user = { firstName: "Marcus", lastName: "Kronenberg" };
+const userData = { job: "developer", country: "Germany", lastName: "Schmidt" };
 
-Object.defineProperty(user, 'firstName', { writable: false });
-Object.defineProperty(userData, 'job', { configurable: false });
+Object.defineProperty(user, "firstName", { writable: false });
+Object.defineProperty(userData, "job", { configurable: false });
 
 const result = shallowMerge(user, userData);
 
 console.log(result); // { firstName: 'Marcus', lastName: 'Schmidt', job: 'developer', country: 'Germany' }
-console.log(Object.getOwnPropertyDescriptor(result, 'firstName').writable); // false
-console.log(Object.getOwnPropertyDescriptor(result, 'job').configurable); // false
+console.log(Object.getOwnPropertyDescriptor(result, "firstName").writable); // false
+console.log(Object.getOwnPropertyDescriptor(result, "job").configurable); // false
 
 exports.shallowMerge = shallowMerge;
