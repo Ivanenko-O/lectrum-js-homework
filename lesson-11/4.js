@@ -27,15 +27,34 @@
  */
 
 // Решение
-function createLogger() {
-    return {
-        call: function() {
 
-        }, 
-        print: function() {
-            
-        }
+function isFunction(func) {
+  return typeof func === "function";
+}
+
+function createLogger() {
+  let dataFunctions = [];
+
+  return {
+    call: function(func, ...args) {
+      if (!isFunction(func)) {
+        throw new Error(`${func} isn't a function`);
+      }
+
+      let res = func(...args);
+
+      dataFunctions.push({
+        name: func.name,
+        in: args,
+        out: res
+      });
+
+      return res;
+    },
+    print: function() {
+      return dataFunctions;
     }
+  };
 }
 
 const returnIdentity = n => n;
@@ -44,6 +63,7 @@ const returnNothing = () => {};
 
 const logger1 = createLogger();
 console.log(logger1.call(returnIdentity, 1)); // 1
+console.log(logger1.call(sum, 1, 2)); // 3
 console.log(logger1.call(sum, 1, 2)); // 3
 console.log(logger1.print()); // [ { name: 'returnIdentity', in: [ 1 ], out: 1 }, { name: 'sum', in: [ 1, 2 ], out: 3 } ]
 
