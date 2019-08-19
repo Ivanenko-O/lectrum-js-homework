@@ -10,23 +10,40 @@
  */
 
 // Решение
+// function createFibonacciGenerator() {
+// 	let a = 0;
+// 	let b = 1;
+
+// 	return function() {
+// 		let sum = a + b;
+
+// 		if (a === 0) {
+// 			a = b;
+// 			return sum;
+// 		}
+
+// 		a = b;
+// 		b = sum;
+
+// 		return b;
+// 	};
+// }
+
 function createFibonacciGenerator() {
-	let a = 0;
-	let b = 1;
+  let numbers = [];
+  return function() {
+    let res;
+    let numbersLength = numbers.length;
 
-	return function() {
-		let sum = a + b;
-
-		if (a === 0) {
-			a = b;
-			return sum;
-		}
-
-		a = b;
-		b = sum;
-
-		return b;
-	};
+    if (numbersLength < 2) {
+      numbers.push(1);
+      res = 1;
+    } else {
+      res = numbers[numbersLength - 1] + numbers[numbersLength - 2];
+      numbers.push(res);
+    }
+    return res;
+  };
 }
 
 const generateFibonacciNumber = createFibonacciGenerator();
